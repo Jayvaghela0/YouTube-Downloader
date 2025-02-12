@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 # Environment Variables
-API_KEY = os.getenv('YTJBV', 'YTJBV')  # Default value 'YTJBV' agar environment variable set nahi hai
+API_KEY = os.getenv('JBVYR', 'YTJBV')  # Default value 'YTJBV' agar environment variable set nahi hai
 
 @app.route('/')
 def home():
