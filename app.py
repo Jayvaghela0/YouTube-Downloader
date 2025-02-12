@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-import youtube_downloader
+import youtube_dl
 import os
 
 app = Flask(__name__)
