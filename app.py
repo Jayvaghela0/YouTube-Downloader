@@ -7,6 +7,10 @@ app = Flask(__name__)
 # Environment Variables
 API_KEY = os.getenv('JBVYR', 'YTJBV')  # Default value 'YTJBV' agar environment variable set nahi hai
 
+@app.route('/')
+def home():
+    return "Welcome to YouTube Video Downloader! Use /download?url=YOUTUBE_URL to download videos."
+
 @app.route('/download', methods=['GET'])
 def download_video():
     # Get video URL from query parameters
