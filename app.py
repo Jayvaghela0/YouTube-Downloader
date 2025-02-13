@@ -27,9 +27,13 @@ def download_video():
     try:
         # yt-dlp options
         ydl_opts = {
-            'format': 'best',  # Best quality
-            'quiet': True,     # Suppress logs
-        }
+    'format': 'best',
+    'quiet': True,
+    'cookiefile': 'cookies.txt',  # Cookies file ka path
+    'http_headers': {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+    }
+}
 
         # Download video info
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
