@@ -1,15 +1,11 @@
 from flask import Flask, request, jsonify
-from pytube import YouTube
+import yt_dlp
 import os
 
 app = Flask(__name__)
 
 # Environment Variables
 API_KEY = os.getenv('JBVYR', 'YTJBV')  # Default value 'YTJBV' agar environment variable set nahi hai
-
-@app.route('/')
-def home():
-    return "Welcome to YouTube Video Downloader! Use /download?url=YOUTUBE_URL to download videos."
 
 @app.route('/download', methods=['GET'])
 def download_video():
@@ -25,15 +21,17 @@ def download_video():
         }), 403
 
     try:
-        # Create YouTube object
-        yt = YouTube(video_url)
-        
-        # Get the highest resolution progressive stream
-        stream = yt.streams.filter(progressive=True, file_extension='mp4').first()
-        
-        # Get the download URL
-        download_url = stream.url
-        
+        # yt-dlp options
+        ydl_opts = {
+            'format': 'best',  # Best quality
+            'quiet': True,     # Suppress logs
+        }
+
+        # Download video info
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(video_url, download=False)
+            download_url = info['url']  # Direct download URL
+
         # Return the download URL as JSON response
         return jsonify({
             'status': 'success',
