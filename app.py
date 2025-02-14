@@ -1,18 +1,18 @@
-from flask import Flask, request, jsonify, send_file
-from flask_cors import CORS
+from flask import Flask, request, jsonify
+from flask_cors import CORS  # CORS import kare
 import yt_dlp
 import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # CORS enable kare
 
 # Environment Variables
-API_KEY = os.getenv('JBVYR', 'YTJBV')
+API_KEY = os.getenv('JBVYR', 'YTJBV')  # Default value 'YTJBV' agar environment variable set nahi hai
 
 @app.route('/')
 def home():
     return "Welcome to YouTube Video Downloader! Use /download?url=YOUTUBE_URL to download videos."
-    
+
 @app.route('/download', methods=['GET'])
 def download_video():
     # Get video URL from query parameters
@@ -29,28 +29,24 @@ def download_video():
     try:
         # yt-dlp options
         ydl_opts = {
-            'format': 'best',  # Best quality
-            'quiet': True,     # Suppress logs
-            'outtmpl': 'video.mp4',  # Video file ka naam
-            'cookiefile': 'cookies.txt',  # Cookies file ka path
-            'http_headers': {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-                'Referer': 'https://www.youtube.com/',
-            }
-        }
+    'format': 'best',
+    'quiet': True,
+    'cookiefile': 'cookies.txt',  # Cookies file ka path
+    'http_headers': {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Referer': 'https://www.youtube.com/',  # Referer header set kare
+    }
+}
 
-        # Download video
+        # Download video info
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([video_url])
+            info = ydl.extract_info(video_url, download=False)
+            download_url = info['url']  # Direct download URL
 
-        # Video file ka path
-        video_path = 'video.mp4'
-
-        # Return success response
+        # Return the download URL as JSON response
         return jsonify({
             'status': 'success',
-            'message': 'Video downloaded successfully',
-            'video_url': f'/serve_video?path={video_path}'
+            'download_url': download_url
         })
     except Exception as e:
         # Handle errors
@@ -58,14 +54,6 @@ def download_video():
             'status': 'error',
             'message': str(e)
         }), 400
-
-@app.route('/serve_video', methods=['GET'])
-def serve_video():
-    # Get video file path from query parameters
-    video_path = request.args.get('path')
-    
-    # Serve video file
-    return send_file(video_path, as_attachment=True)
 
 if __name__ == '__main__':
     # Run the app
