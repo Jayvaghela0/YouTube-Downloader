@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS  # CORS import kare
 import yt_dlp
 import os
 
 app = Flask(__name__)
+CORS(app)  # CORS enable kare
 
 # Environment Variables
 API_KEY = os.getenv('JBVYR', 'YTJBV')  # Default value 'YTJBV' agar environment variable set nahi hai
@@ -32,6 +34,7 @@ def download_video():
     'cookiefile': 'cookies.txt',  # Cookies file ka path
     'http_headers': {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Referer': 'https://www.youtube.com/',
     }
 }
 
