@@ -9,6 +9,10 @@ CORS(app)
 # Environment Variables
 API_KEY = os.getenv('JBVYR', 'YTJBV')
 
+@app. route('/')
+der home():
+return "welcome to Youtube Video Downloader! Use /download?url=YOUTUBE_URL to download videos."
+
 @app.route('/download', methods=['GET'])
 def download_video():
     # Get video URL from query parameters
