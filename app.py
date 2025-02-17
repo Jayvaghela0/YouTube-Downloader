@@ -9,8 +9,9 @@ import random
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
-# Environment Variables
-API_KEY = os.getenv('JBVYR', 'YTJBV')
+# Load environment variables
+API_KEY = os.getenv('YTJBV')  # Load YTJBV from environment
+ENV_VALUE = os.getenv('JBVYT')  # Load JBVYT from environment
 
 # Folder to store downloaded videos
 DOWNLOAD_FOLDER = 'downloads'
@@ -34,6 +35,11 @@ def delete_video_after_delay(video_path, delay=120):
 
 @app.route('/download', methods=['GET'])
 def download_video():
+    # Check if API key is valid
+    provided_api_key = request.headers.get('X-API-KEY')
+    if provided_api_key != API_KEY:
+        return jsonify({"error": "Invalid API key"}), 403
+
     video_url = request.args.get('url')
     if not video_url:
         return jsonify({"error": "URL parameter is required"}), 400
@@ -61,6 +67,11 @@ def download_video():
             return send_file(video_path, as_attachment=True)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route('/env', methods=['GET'])
+def get_env_value():
+    # Return the environment value (for testing purposes)
+    return jsonify({"JBVYT": ENV_VALUE})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
