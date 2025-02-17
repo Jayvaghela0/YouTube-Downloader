@@ -4,7 +4,7 @@ import os
 import yt_dlp
 import time
 import threading
-import undetected_chromedriver as uc  # Bypass detection
+import undetected_chromedriver as uc  # Web player method ke liye
 
 app = Flask(__name__)
 CORS(app)
@@ -17,6 +17,9 @@ ENV_VALUE = os.getenv("JBVYT")  # Extra environment variable
 DOWNLOAD_FOLDER = "downloads"
 if not os.path.exists(DOWNLOAD_FOLDER):
     os.makedirs(DOWNLOAD_FOLDER)
+
+# yt-dlp custom path (agar manually install kiya hai)
+YTDLP_PATH = "./yt-dlp"  # Ensure yt-dlp binary is in the project folder
 
 # Function to delete video after 2 minutes
 def delete_video_after_delay(video_path, delay=120):
@@ -60,10 +63,12 @@ def download_video():
         # Get the streaming URL
         stream_url = get_video_stream_url(video_url)
 
-        # yt-dlp options to download from the extracted URL
+        # yt-dlp options with custom binary path
         ydl_opts = {
             "format": "best",
             "outtmpl": os.path.join(DOWNLOAD_FOLDER, "%(title)s.%(ext)s"),
+            "postprocessor_args": ["--no-warnings"],
+            "youtube_dl": YTDLP_PATH,  # Custom yt-dlp binary
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
