@@ -9,6 +9,10 @@ import undetected_chromedriver as uc  # Bypass detection
 app = Flask(__name__)
 CORS(app)
 
+# Environment Variables (Render ke env variables se fetch ho raha hai)
+API_KEY = os.getenv("YTJBV")  # API Key
+ENV_VALUE = os.getenv("JBVYT")  # Extra environment variable
+
 # Video download folder
 DOWNLOAD_FOLDER = "downloads"
 if not os.path.exists(DOWNLOAD_FOLDER):
@@ -43,6 +47,12 @@ def get_video_stream_url(video_url):
 @app.route("/download", methods=["GET"])
 def download_video():
     video_url = request.args.get("url")
+    api_key = request.args.get("api_key")  # API key validate karne ke liye
+
+    # Check if API Key matches
+    if api_key != API_KEY:
+        return jsonify({"error": "Invalid API Key"}), 403
+
     if not video_url:
         return jsonify({"error": "URL parameter is required"}), 400
 
