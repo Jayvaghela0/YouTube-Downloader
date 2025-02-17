@@ -9,6 +9,9 @@ import random
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
+# Environment Variables
+API_KEY = os.getenv('JBVYR', 'YTJBV')
+
 # Folder to store downloaded videos
 DOWNLOAD_FOLDER = 'downloads'
 if not os.path.exists(DOWNLOAD_FOLDER):
