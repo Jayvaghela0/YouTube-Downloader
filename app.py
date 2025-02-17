@@ -18,6 +18,9 @@ DOWNLOAD_FOLDER = 'downloads'
 if not os.path.exists(DOWNLOAD_FOLDER):
     os.makedirs(DOWNLOAD_FOLDER)
 
+# Path to cookies file
+COOKIES_FILE = 'cookies.txt'  # Ensure this file exists in the same directory as the script
+
 # List of user-agents to rotate
 USER_AGENTS = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -47,11 +50,12 @@ def download_video():
     # Randomly select a user-agent
     user_agent = random.choice(USER_AGENTS)
 
-    # yt-dlp options with rotating user-agent
+    # yt-dlp options with rotating user-agent and cookies file
     ydl_opts = {
         'format': 'best',
         'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
         'user-agent': user_agent,
+        'cookiefile': COOKIES_FILE,  # Use cookies file to avoid bot detection
     }
 
     try:
