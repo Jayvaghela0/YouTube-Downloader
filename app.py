@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 API_KEY = os.getenv('YTJBV')  # Load YTJBV from environment
 ENV_VALUE = os.getenv('JBVYT')  # Load JBVYT from environment
 
+
 # Folder to store downloaded videos
 DOWNLOAD_FOLDER = 'downloads'
 if not os.path.exists(DOWNLOAD_FOLDER):
@@ -44,6 +45,10 @@ def delete_video_after_delay(video_path, delay=120):
     if os.path.exists(video_path):
         os.remove(video_path)
 
+@app.route('/')
+def home():
+    return "Welcome to YouTube Video Downloader! Use /download?url=YOUTUBE_URL to download videos."
+    
 @app.route('/download', methods=['GET'])
 def download_video():
     # Check if API key is valid
