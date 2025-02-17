@@ -18,7 +18,6 @@ logger = logging.getLogger(__name__)
 API_KEY = os.getenv('YTJBV')  # Load YTJBV from environment
 ENV_VALUE = os.getenv('JBVYT')  # Load JBVYT from environment
 
-
 # Folder to store downloaded videos
 DOWNLOAD_FOLDER = 'downloads'
 if not os.path.exists(DOWNLOAD_FOLDER):
@@ -26,6 +25,9 @@ if not os.path.exists(DOWNLOAD_FOLDER):
 
 # Path to cookies file
 COOKIES_FILE = 'cookies.txt'  # Ensure this file exists in the same directory as the script
+
+# Proxy configuration (without authentication)
+PROXY_URL = 'http://your-proxy-ip:your-proxy-port'  # Replace with your proxy IP and port
 
 # List of user-agents to rotate
 USER_AGENTS = [
@@ -42,10 +44,6 @@ def delete_video_after_delay(video_path, delay=120):
     if os.path.exists(video_path):
         os.remove(video_path)
 
-@app.route('/')
-def home():
-    return "Welcome to YouTube Video Downloader! Use /download?url=YOUTUBE_URL to download videos."
-
 @app.route('/download', methods=['GET'])
 def download_video():
     # Check if API key is valid
@@ -60,12 +58,13 @@ def download_video():
     # Randomly select a user-agent
     user_agent = random.choice(USER_AGENTS)
 
-    # yt-dlp options with rotating user-agent and cookies file
+    # yt-dlp options with rotating user-agent, cookies file, and proxy
     ydl_opts = {
         'format': 'best',
         'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
         'user-agent': user_agent,
         'cookiefile': COOKIES_FILE,  # Use cookies file to avoid bot detection
+        'proxy': PROXY_URL,  # Use proxy to bypass IP blocking
     }
 
     try:
