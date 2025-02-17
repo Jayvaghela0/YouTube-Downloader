@@ -28,7 +28,7 @@ if not os.path.exists(DOWNLOAD_FOLDER):
 COOKIES_FILE = 'cookies.txt'  # Ensure this file exists in the same directory as the script
 
 # Proxy configuration (without authentication)
-PROXY_URL = 'http://your-proxy-ip:your-proxy-port'  # Replace with your proxy IP and port
+PROXY_URL = 'http://129.154.225.163:8100'  # Replace with your proxy IP and port
 
 # List of user-agents to rotate
 USER_AGENTS = [
