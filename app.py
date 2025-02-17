@@ -28,7 +28,7 @@ COOKIES_FILE = 'cookies.txt'  # Ensure this file exists in the same directory as
 
 # List of proxies to rotate
 PROXIES = [
-    'http://proxy1-ip:proxy1-port',
+    'http://129.154.225.163:8100',
     'http://proxy2-ip:proxy2-port',
     'http://proxy3-ip:proxy3-port',
 ]
