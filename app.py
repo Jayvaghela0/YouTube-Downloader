@@ -30,7 +30,7 @@ COOKIES_FILE = 'cookies.txt'  # Ensure this file exists in the same directory as
 PROXIES = [
     'http://129.154.225.163:8100',
     'http://13.232.140.125:3128',
-    'http://proxy3-ip:proxy3-port',
+    'http://3.99.167.1:3128',
 ]
 
 # List of user-agents to rotate
