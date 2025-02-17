@@ -5,9 +5,14 @@ import yt_dlp
 import threading
 import time
 import random
+import logging
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 # Load environment variables
 API_KEY = os.getenv('YTJBV')  # Load YTJBV from environment
@@ -59,6 +64,7 @@ def download_video():
     }
 
     try:
+        logger.info(f"Downloading video from URL: {video_url}")
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(video_url, download=True)
             video_filename = ydl.prepare_filename(info_dict)
@@ -69,7 +75,11 @@ def download_video():
 
             # Serve the video file for download
             return send_file(video_path, as_attachment=True)
+    except yt_dlp.utils.DownloadError as e:
+        logger.error(f"DownloadError: {str(e)}")
+        return jsonify({"error": "Unable to download video data"}), 500
     except Exception as e:
+        logger.error(f"Unexpected error: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 @app.route('/env', methods=['GET'])
