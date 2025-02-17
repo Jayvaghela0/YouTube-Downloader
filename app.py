@@ -29,7 +29,7 @@ COOKIES_FILE = 'cookies.txt'  # Ensure this file exists in the same directory as
 # List of proxies to rotate
 PROXIES = [
     'http://103.199.97.1613:45804',
-    'http://13.232.140.125:3128',
+    'http://163.53.205.161:4153',
     'http://3.99.167.1:3128',
 ]
 
