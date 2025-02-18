@@ -41,9 +41,15 @@ def get_video_stream_url(video_url):
         
         return video_stream_url
 
-@app.route('/')
-def home():
-    return "Welcome to YouTube Video Downloader! Use /download?url=YOUTUBE_URL to download videos."
+@app.route('/test_playwright')
+def test_playwright():
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch()
+            browser.close()
+        return "✅ Playwright is working!"
+    except Exception as e:
+        return f"❌ Playwright error: {e}"
 
 
 @app.route('/download', methods=['GET'])
