@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import os
 import yt_dlp
 from playwright.sync_api import sync_playwright
+import subprocess
 
 app = Flask(__name__)
 
@@ -9,11 +10,21 @@ app = Flask(__name__)
 API_KEY = os.getenv('YTJBV')
 JBVYT = os.getenv('JBVYT')
 
+# Playwright browsers install karein (if not already installed)
+def install_playwright_browsers():
+    try:
+        subprocess.run(["playwright", "install"], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error installing Playwright browsers: {e}")
+
 # Playwright ke through video stream URL extract karein
 def get_video_stream_url(video_url):
     with sync_playwright() as p:
-        # Chromium browser launch karein (default settings ka use karein)
-        browser = p.chromium.launch(headless=True)
+        # Chromium browser launch karein (specific path set karein)
+        browser = p.chromium.launch(
+            headless=True,
+            executable_path="/opt/render/.cache/ms-playwright/chromium-1071/chrome-linux/chrome"  # Specific path set karein
+        )
         context = browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",  # User-Agent set karein
             storage_state="cookies.json"  # Cookies file ka use karein
@@ -40,17 +51,6 @@ def get_video_stream_url(video_url):
         browser.close()
         
         return video_stream_url
-
-@app.route('/test_playwright')
-def test_playwright():
-    try:
-        with sync_playwright() as p:
-            browser = p.chromium.launch()
-            browser.close()
-        return "✅ Playwright is working!"
-    except Exception as e:
-        return f"❌ Playwright error: {e}"
-
 
 @app.route('/download', methods=['GET'])
 def download_video():
@@ -85,5 +85,8 @@ def download_video():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
+    # Playwright browsers install karein
+    install_playwright_browsers()
+    
     # Flask app run karein
     app.run(host='0.0.0.0', port=5000)
