@@ -51,7 +51,9 @@ def get_video_stream_url(video_url):
         browser.close()
         
         return video_stream_url
-
+@app.route('/')
+def home():
+    return "Welcome to YouTube Video Downloader! Use /download?url=YOUTUBE_URL to download videos."
 @app.route('/download', methods=['GET'])
 def download_video():
     video_url = request.args.get('url')
